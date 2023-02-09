@@ -7,29 +7,45 @@ namespace gptAzureCognitive
 {
     class GptService
     {
-        public static async Task<string> SpeakWithIA(string prompt)
+        private static List<string> davinciCategories = new List<string>
+        {
+            "Event",
+            "Organization",
+            "Skill",
+            "Location"
+        };
+
+        public static async Task<string> SpeakWithIA(string prompt, List<string> categories)
         {
             if (string.IsNullOrEmpty(prompt))
                 return prompt;
 
-            // Sua chave API
-            string apiKey = "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";
+            string apiKey = "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";
+            string model = "text-curie-001";
+            int max_tokens = 1048;
 
-            // O modelo que você deseja usar
-            string model = "text-davinci-003";
+            if (categories.Count > 0)
+            {
+                var hasCategories = davinciCategories.Any(a => categories.Contains(a));
+                model = hasCategories ? "text-davinci-003" : "text-curie-001";
+                max_tokens = hasCategories ? 2048 : 1048;
+            }
+            else
+            {
+                var hasBigSearch = prompt.Length > 250;
+                model = hasBigSearch ? "text-davinci-003" : "text-curie-001";
+                max_tokens = hasBigSearch ? 2048 : 1048;
+            }
 
             // Instância de um objeto HttpClient
             var client = new HttpClient();
-
-            // Adicione a chave API às configurações do cabeçalho da solicitação
             client.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
 
-            // Crie o corpo da solicitação
             var request = new
             {
                 model,
                 prompt,
-                max_tokens = 2048,
+                max_tokens,
                 n = 1,
                 stop = "",
                 temperature = 0.5

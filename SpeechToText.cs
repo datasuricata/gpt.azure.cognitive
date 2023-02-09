@@ -1,5 +1,7 @@
 ﻿using Microsoft.CognitiveServices.Speech;
 using Microsoft.CognitiveServices.Speech.Audio;
+using System;
+using System.Threading.Tasks;
 
 namespace gptAzureCognitive
 {
@@ -7,11 +9,13 @@ namespace gptAzureCognitive
     {
         public static async Task<string> RecognizeAsync()
         {
-            var speechConfig = SpeechConfig.FromSubscription("24327e61058648f782d48aae31c4d6c3", "eastus");
+            var speechConfig = SpeechConfig.FromSubscription("4585a7bef0cb4df7b9ac31e382aaca51", "eastus");
             speechConfig.SpeechRecognitionLanguage = "pt-BR";
 
             using var audioConfig = AudioConfig.FromDefaultMicrophoneInput();
             using var speechRecognizer = new SpeechRecognizer(speechConfig, audioConfig);
+
+
 
             Console.WriteLine("aguardando fala...");
             var speechRecognitionResult = await speechRecognizer.RecognizeOnceAsync();

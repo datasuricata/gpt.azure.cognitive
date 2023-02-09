@@ -3,6 +3,7 @@
 while (true)
 {
     var translated = await SpeechToText.RecognizeAsync();
-    var answer = await GptService.SpeakWithIA(translated);
-    await TextToSpeech.RecognizeAsync(answer);
+    var categories = TextAnalytic.EntityStandartRecognition(translated);
+    var answer = await GptService.SpeakWithIA(translated, categories);
+    await TextToSpeech.RecognizeAndOutputAsync(answer);
 }

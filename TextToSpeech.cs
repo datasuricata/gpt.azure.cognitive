@@ -1,15 +1,17 @@
 ﻿using Microsoft.CognitiveServices.Speech;
+using System;
+using System.Threading.Tasks;
 
 namespace gptAzureCognitive
 {
     class TextToSpeech
     {
-        public static async Task RecognizeAsync(string sintax)
+        public static async Task RecognizeAndOutputAsync(string sintax)
         {
             if (string.IsNullOrEmpty(sintax))
                 return;
 
-            var speechConfig = SpeechConfig.FromSubscription("24327e61058648f782d48aae31c4d6c3", "eastus");
+            var speechConfig = SpeechConfig.FromSubscription("4585a7bef0cb4df7b9ac31e382aaca51", "eastus");
             // The language of the voice that speaks.
             speechConfig.SpeechSynthesisVoiceName = "pt-BR-FabioNeural";
             using var speechSynthesizer = new SpeechSynthesizer(speechConfig);
