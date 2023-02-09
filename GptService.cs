@@ -13,10 +13,10 @@ namespace gptAzureCognitive
                 return prompt;
 
             // Sua chave API
-            string apiKey = "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";
+            string apiKey = "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";
 
             // O modelo que você deseja usar
-            string model = "text-davinci-002";
+            string model = "text-davinci-003";
 
             // Instância de um objeto HttpClient
             var client = new HttpClient();
@@ -51,9 +51,6 @@ namespace gptAzureCognitive
 
                 // Obtenha o texto da resposta
                 var responseText = Regex.Replace(responseJson["choices"][0]["text"].ToString(), @"\t|\n|\r", string.Empty);
-
-                // Imprima a resposta em texto puro
-                Console.WriteLine(responseText);
 
                 return responseText;
             }
