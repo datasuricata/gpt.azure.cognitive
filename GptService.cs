@@ -20,7 +20,7 @@ namespace gptAzureCognitive
             if (string.IsNullOrEmpty(prompt))
                 return prompt;
 
-            string apiKey = "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";
+            string apiKey = "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";
             string model = "text-curie-001";
             int max_tokens = 1048;
 
@@ -37,7 +37,6 @@ namespace gptAzureCognitive
                 max_tokens = hasBigSearch ? 2048 : 1048;
             }
 
-            // Instância de um objeto HttpClient
             var client = new HttpClient();
             client.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
 
@@ -51,32 +50,33 @@ namespace gptAzureCognitive
                 temperature = 0.5
             };
 
-            // Faça a solicitação à API
-            var requestJson = JsonConvert.SerializeObject(request);
-            var response = await client.PostAsync("https://api.openai.com/v1/completions",
-                            new StringContent(requestJson, Encoding.UTF8, "application/json"));
-
-            // Verifique se a solicitação foi bem-sucedida
-            if (response.IsSuccessStatusCode)
+            try
             {
-                // Obtenha a resposta da API
-                var responseString = await response.Content.ReadAsStringAsync();
+                var requestJson = JsonConvert.SerializeObject(request);
+                var response = await client.PostAsync("https://api.openai.com/v1/completions",
+                                new StringContent(requestJson, Encoding.UTF8, "application/json"));
 
-                // Analise a resposta como JSON
-                var responseJson = JObject.Parse(responseString);
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseString = await response.Content.ReadAsStringAsync();
+                    var responseJson = JObject.Parse(responseString);
+                    
+                    // Obtenha o texto da resposta
+                    var responseText = Regex.Replace(responseJson["choices"][0]["text"].ToString(), @"\t|\n|\r", string.Empty);
 
-                // Obtenha o texto da resposta
-                var responseText = Regex.Replace(responseJson["choices"][0]["text"].ToString(), @"\t|\n|\r", string.Empty);
+                    return responseText;
+                }
+                else
+                {
+                    Console.WriteLine(response.StatusCode);
+                    Console.WriteLine(await response.Content.ReadAsStringAsync());
 
-                return responseText;
+                    return "desculpe, acho que dei uma bugada";
+                }
             }
-            else
+            catch (Exception)
             {
-                // Imprima o código de status da resposta
-                Console.WriteLine(response.StatusCode);
-                Console.WriteLine(await response.Content.ReadAsStringAsync());
-
-                return "desculpe acho que buguei";
+                return "não conseguir localizar nada no momento, volte mais tarde minha agenda já esta lotada";
             }
         }
     }

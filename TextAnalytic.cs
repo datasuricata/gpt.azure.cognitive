@@ -9,6 +9,9 @@ namespace gptAzureCognitive
         {
             List<string> categories = new();
 
+            if (!string.IsNullOrEmpty(text))
+                return categories;
+
             AzureKeyCredential credentials = new AzureKeyCredential("c18fb0a403fb4d15b67ae3ca64915e76");
             Uri endpoint = new Uri("https://gpt-analytics-cognitive.cognitiveservices.azure.com/");
 
@@ -20,7 +23,7 @@ namespace gptAzureCognitive
                 Console.WriteLine("Named Entities NER:");
                 foreach (var entity in response.Value)
                 {
-                    if (entity.Category != null)
+                    if (!string.IsNullOrEmpty(entity.Category.ToString()))
                         categories.Add(entity.Category.ToString());
 
                     Console.WriteLine($"\tText: {entity.Text},\tCategory: {entity.Category},\tSub-Category: {entity.SubCategory}");
